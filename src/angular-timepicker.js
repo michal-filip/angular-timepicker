@@ -3,8 +3,8 @@
 (function (angular) {
     'use strict';
 
-    angular.module('dnTimepicker', ['ui.bootstrap.position', 'dateParser'])
-        .factory('dnTimepickerHelpers', function () {
+    angular.module('dnTimepicker', ['dateParser'])
+        .factory('dnTimepickerHelpers', ['$window', '$document', function ($window, $document) {
             return {
                 stringToMinutes: function (str) {
                     if (!str) {
@@ -46,11 +46,61 @@
                         }
                     }
                     return index;
+                },
+
+                position: function(elem) {
+
+                    function getRawNode(elem) {
+                        return elem.nodeName ? elem : elem[0] || elem;
+                    }
+
+                    function offset(elem) {
+                        var elemBCR = elem.getBoundingClientRect();
+                        return {
+                            width: Math.round(angular.isNumber(elemBCR.width) ? elemBCR.width : elem.offsetWidth),
+                            height: Math.round(angular.isNumber(elemBCR.height) ? elemBCR.height : elem.offsetHeight),
+                            top: Math.round(elemBCR.top + ($window.pageYOffset || $document[0].documentElement.scrollTop)),
+                            left: Math.round(elemBCR.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft))
+                        };
+                    }
+
+                    function offsetParent(elem) {
+                        var offsetParent = elem.offsetParent || $document[0].documentElement;
+
+                        function isStaticPositioned(el) {
+                            return ($window.getComputedStyle(el).position || 'static') === 'static';
+                        }
+
+                        while (offsetParent && offsetParent !== $document[0].documentElement && isStaticPositioned(offsetParent)) {
+                            offsetParent = offsetParent.offsetParent;
+                        }
+
+                        return offsetParent || $document[0].documentElement;
+                    }
+
+                    elem = getRawNode(elem);
+
+                    var elemOffset = offset(elem);
+                    var parent = offsetParent(elem);
+                    var parentOffset = {top: 0, left: 0};
+
+                    if (parent !== $document[0].documentElement) {
+                        parentOffset = offset(parent);
+                        parentOffset.top += parent.clientTop - parent.scrollTop;
+                        parentOffset.left += parent.clientLeft - parent.scrollLeft;
+                    }
+
+                    return {
+                        width: Math.round(angular.isNumber(elemOffset.width) ? elemOffset.width : elem.offsetWidth),
+                        height: Math.round(angular.isNumber(elemOffset.height) ? elemOffset.height : elem.offsetHeight),
+                        top: Math.round(elemOffset.top - parentOffset.top),
+                        left: Math.round(elemOffset.left - parentOffset.left)
+                    };
                 }
             };
-        })
-        .directive('dnTimepicker', ['$compile', '$parse', '$uibPosition', '$document', 'dateFilter', '$dateParser', 'dnTimepickerHelpers', '$log',
-            function ($compile, $parse, $position, $document, dateFilter, $dateParser, dnTimepickerHelpers, $log) {
+        }])
+        .directive('dnTimepicker', ['$compile', '$parse', '$document', 'dateFilter', '$dateParser', 'dnTimepickerHelpers', '$log',
+            function ($compile, $parse, $document, dateFilter, $dateParser, dnTimepickerHelpers, $log) {
                 return {
                     restrict: 'A',
                     require: 'ngModel',
@@ -197,7 +247,7 @@
                         // Opens the timepicker
                         scope.openPopup = function () {
                             // Set position
-                            scope.position = $position.position(element);
+                            scope.position = dnTimepickerHelpers.position(element);
                             scope.position.top = scope.position.top + element.prop('offsetHeight');
 
                             // Open list

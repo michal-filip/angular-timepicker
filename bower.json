@@ -1,11 +1,12 @@
 {
-  "name": "angular-timepicker",
-  "version": "1.0.10",
-  "homepage": "https://github.com/Geta/angular-timepicker",
+  "name": "angular-timepicker-no-bootstrap",
+  "version": "1.0.10.1",
+  "homepage": "https://github.com/rrhanson/angular-timepicker",
   "authors": [
-    "Dzulqarnain Nasir (dzul@geta.no)"
+    "Dzulqarnain Nasir (dzul@geta.no)",
+    "Ryan Hanson"
   ],
-  "description": "AngularJS Time Picker",
+  "description": "AngularJS Time Picker with no bootstrap dependency",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -25,7 +26,6 @@
   },
   "dependencies": {
     "angular": "^1.5.3",
-    "angular-dateParser": "^1.0.12",
-    "angular-ui-bootstrap": "^1.3.1"
+    "angular-dateParser": "^1.0.12"
   }
 }

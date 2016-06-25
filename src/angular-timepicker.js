@@ -198,10 +198,14 @@
                             ctrl.$render();
                         });
 
-                        // Set up renderer and parser
-
+                        // Render value display in input while preserving cursor location
                         ctrl.$render = function () {
+                            var start = element[0].selectionStart;
+                            var end = element[0].selectionEnd;
+
                             element.val(angular.isDate(current) ? dateFilter(current, scope.timepicker.timeFormat) : (ctrl.$viewValue ? ctrl.$viewValue : ''));
+
+                            element[0].setSelectionRange(start, end);
                         };
 
                         // Parses manually entered time

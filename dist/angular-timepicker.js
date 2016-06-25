@@ -92,7 +92,7 @@
             },
             link: function(scope, element, attrs, ctrl) {
                 // Local variables
-                var current = null, list = [], updateList = true;
+                var current = null, list = [], updateList = true, lastValidValue = null, lastKeyup = null;
                 // Model
                 scope.timepicker = {
                     element: null,
@@ -126,6 +126,9 @@
                         if (isNaN(value)) {
                             $log.warn("Failed to parse model.");
                         }
+                    }
+                    if (angular.isDate(value)) {
+                        lastValidValue = value;
                     }
                     current = value;
                 }
@@ -212,6 +215,9 @@
                 scope.closePopup = function() {
                     if (scope.timepicker.isOpen) {
                         scope.timepicker.isOpen = false;
+                        if (!angular.isDate(scope.ngModel)) {
+                            scope.ngModel = lastValidValue;
+                        }
                         scope.$apply();
                         element[0].blur();
                     }
@@ -221,8 +227,6 @@
                 // Set up the element
                 element.bind("focus", function() {
                     scope.openPopup();
-                }).bind("blur", function() {
-                    scope.closePopup();
                 }).bind("keypress keyup", function(e) {
                     if (e.which === 38 && scope.timepicker.activeIdx > 0) {
                         // UP
@@ -234,10 +238,17 @@
                         scope.scrollToSelected();
                     } else if (e.which === 13 && scope.timepicker.activeIdx > -1) {
                         // ENTER
-                        scope.select(scope.timepicker.optionList()[scope.timepicker.activeIdx]);
+                        if (lastKeyup === 38 || lastKeyup === 40) {
+                            scope.select(scope.timepicker.optionList()[scope.timepicker.activeIdx]);
+                        }
                         scope.closePopup();
                     }
+                    lastKeyup = e.which;
                     scope.$digest();
+                }).bind("keypress keydown", function(e) {
+                    if (e.which === 9 || e.which === 27) {
+                        scope.closePopup();
+                    }
                 });
                 // Close popup when clicked anywhere else in document
                 $document.bind("click", function(event) {
@@ -255,7 +266,7 @@
             replace: true,
             transclude: false,
             template: '<ul class="dn-timepicker-popup dropdown-menu" ng-style="{display: timepicker.isOpen && \'block\' || \'none\', top: position.top+\'px\', left: position.left+\'px\'}"><li ng-repeat="time in timepicker.optionList()" ng-class="{active: isActive($index) }" ng-mouseenter="setActive($index)"><a ng-click="select(time)">{{time | date:timepicker.timeFormat}}</a></li></ul>',
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 scope.timepicker.element = element;
                 element.find("a").bind("click", function(event) {
                     event.preventDefault();

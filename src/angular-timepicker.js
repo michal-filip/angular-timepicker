@@ -310,7 +310,7 @@
                                 scope.$digest();
                             })
                             .bind('keypress keydown', function(e) {
-                                if(e.which === 9 || e.which === 27) {
+                                if(e.which === 9 || e.which === 27) { // TAB || ESC
                                     scope.closePopup();
                                 }
                             });

@@ -247,7 +247,7 @@
                         // Sets the timepicker scrollbar so that selected item is visible
                         scope.scrollToSelected = function () {
                             if (scope.timepicker.element && scope.timepicker.activeIdx > -1) {
-                                var target = scope.timepicker.element[0].querySelector('.active');
+                                var target = scope.timepicker.element[0].children[scope.timepicker.activeIdx];
                                 target.parentNode.scrollTop = target.offsetTop - 50;
                             }
                         };

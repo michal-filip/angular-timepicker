@@ -1,12 +1,12 @@
 {
   "name": "angular-timepicker-dropdown",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "homepage": "https://github.com/rrhanson/angular-timepicker",
   "authors": [
     "Dzulqarnain Nasir (dzul@geta.no)",
     "Ryan Hanson"
   ],
-  "description": "AngularJS Time Picker with no bootstrap dependency",
+  "description": "AngularJS Dropdown Style Time Picker",
   "license": "MIT",
   "ignore": [
     "**/.*",

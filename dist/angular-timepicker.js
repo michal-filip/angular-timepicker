@@ -159,9 +159,12 @@
                     setCurrentValue(value);
                     ctrl.$render();
                 });
-                // Set up renderer and parser
+                // Render value display in input while preserving cursor location
                 ctrl.$render = function() {
+                    var start = element[0].selectionStart;
+                    var end = element[0].selectionEnd;
                     element.val(angular.isDate(current) ? dateFilter(current, scope.timepicker.timeFormat) : ctrl.$viewValue ? ctrl.$viewValue : "");
+                    element[0].setSelectionRange(start, end);
                 };
                 // Parses manually entered time
                 ctrl.$parsers.unshift(function(viewValue) {
@@ -193,7 +196,7 @@
                 // Sets the timepicker scrollbar so that selected item is visible
                 scope.scrollToSelected = function() {
                     if (scope.timepicker.element && scope.timepicker.activeIdx > -1) {
-                        var target = scope.timepicker.element[0].querySelector(".active");
+                        var target = scope.timepicker.element[0].children[scope.timepicker.activeIdx];
                         target.parentNode.scrollTop = target.offsetTop - 50;
                     }
                 };
@@ -247,6 +250,7 @@
                     scope.$digest();
                 }).bind("keypress keydown", function(e) {
                     if (e.which === 9 || e.which === 27) {
+                        // TAB || ESC
                         scope.closePopup();
                     }
                 });

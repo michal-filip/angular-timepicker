@@ -1,6 +1,12 @@
-# Angular Timepicker Directive
+# Angular Timepicker Dropdown Directive
 
 A simple dropdown style timepicker directive.
+
+This is a fork of the excellent Angular Timepicker Directive by Dnasir (https://github.com/Geta/angular-timepicker).
+
+## Installation
+
+bower install angular-timepicker-dropdown
 
 ## Prerequisites
 

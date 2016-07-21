@@ -277,7 +277,7 @@
                                 scope.timepicker.isOpen = false;
 
                                 if(!angular.isDate(scope.ngModel)) {
-                                    scope.ngModel = lastValidValue;
+                                    ctrl.$setViewValue(lastValidValue);
                                 }
 
                                 scope.$apply();

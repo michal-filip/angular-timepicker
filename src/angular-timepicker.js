@@ -144,7 +144,7 @@
 
                             setCurrentValue(current);
 
-                            return current;
+                            return angular.copy(current);
                         }
 
                         function setCurrentValue(value) {

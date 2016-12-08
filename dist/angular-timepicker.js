@@ -118,7 +118,7 @@
                     current.setMinutes(date.getMinutes());
                     current.setSeconds(date.getSeconds());
                     setCurrentValue(current);
-                    return current;
+                    return angular.copy(current);
                 }
                 function setCurrentValue(value) {
                     if (!angular.isDate(value)) {
